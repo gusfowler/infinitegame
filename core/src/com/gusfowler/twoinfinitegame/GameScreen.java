@@ -20,8 +20,7 @@ public class GameScreen implements Screen {
 	OrthographicCamera camera;
 	Array<Piece> livePieces;
 	gameManage gameMan;
-	
-	private int spawnPieceTimeout = 64, spawnPieceCounter = 0;
+	boolean boardChanged = false;
 	
 	public GameScreen(InfiniteGame g) {
 		infGame = g;
@@ -35,8 +34,8 @@ public class GameScreen implements Screen {
 		livePieces = new Array<Piece>();
 		gameMan = new gameManage(this, blackBox.getWidth());
 		
-		spawnPiece();
-		spawnPiece();
+		gameMan.newPiece();
+		gameMan.newPiece();
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class GameScreen implements Screen {
 		drawPieces();
 		infGame.batch.end();
 		
-		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) spawnPiece();
+		if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) gameMan.newPiece();
 	}
 
 	@Override
@@ -91,32 +90,6 @@ public class GameScreen implements Screen {
 		// TODO Auto-generated method stub
 		
 	}
-
-	private void spawnPiece() {
-		spawnPieceCounter++;    
-		boolean addPiece = true;
-		int xMult = MathUtils.random(0, 3);
-		int yMult = MathUtils.random(0, 3);
-		Piece piece = new Piece(infGame.font, (gameBoard.x + (16 * (xMult + 1)) + (whiteBox.getWidth() * xMult)), (gameBoard.y + (16 * (yMult + 1)) + (whiteBox.getHeight() * yMult)), (float)whiteBox.getWidth(), (float)whiteBox.getHeight());
-		
-		for (Piece x : gameMan.gamePieces) {
-			if (piece.rec.x == x.rec.x && piece.rec.y == x.rec.y) {
-				addPiece = false;
-			}
-		}
-		
-		if (addPiece) {
-			gameMan.gamePieces.add(piece);
-			spawnPieceCounter = 0;
-		}
-		if (addPiece == false && spawnPieceCounter < spawnPieceTimeout) {
-			spawnPiece();
-		}
-		if (addPiece == false && spawnPieceCounter > spawnPieceTimeout) {
-			System.out.println("do something for loss game here");
-			System.exit(0);
-		}
-	}
 	
 	private void drawPiece(Piece p) {
 		infGame.batch.draw(whiteBox, p.rec.x, p.rec.y, p.rec.width, p.rec.height);
@@ -124,8 +97,17 @@ public class GameScreen implements Screen {
 	}
 	
 	private void drawPieces() {
-		for (Piece pieces : gameMan.gamePieces) {
+		for (Piece pieces : livePieces) {
 			drawPiece(pieces);
 		}
+	}
+	
+	private void updateLive() {
+		livePieces.clear();
+		livePieces.addAll(gameMan.gamePieces);
+	}
+	
+	private void drawChanges() {
+		
 	}
 }

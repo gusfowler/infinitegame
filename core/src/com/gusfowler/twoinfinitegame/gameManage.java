@@ -1,11 +1,12 @@
 package com.gusfowler.twoinfinitegame;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 
 public class gameManage {
 	final GameScreen gScreen;
 	
-	private int boardMultiplier;
+	private int boardMultiplier, spawnPieceTimeout = 64, spawnPieceCounter = 0;
 	private float boardPixels, boarderLength, pieceLength;
 	private float[] coords;
 	
@@ -41,5 +42,30 @@ public class gameManage {
 		}
 	}
 	
-	
+	public void newPiece() 
+	{
+		spawnPieceCounter++;    
+		boolean addPiece = true;
+		int xMult = MathUtils.random(0, boardMultiplier - 1);
+		int yMult = MathUtils.random(0, boardMultiplier - 1);
+		Piece piece = new Piece(gScreen.infGame.font, coords[xMult], coords[yMult], (float)gScreen.whiteBox.getWidth(), (float)gScreen.whiteBox.getHeight(), xMult, yMult);
+		
+		for (Piece x : gamePieces) {
+			if ((piece.boardX == x.boardX && piece.boardY == x.boardY) || (piece.rec.x == x.rec.x && piece.rec.y == x.rec.y)) {
+				addPiece = false;
+			}
+		}
+		
+		if (addPiece) {
+			gamePieces.add(piece);
+			spawnPieceCounter = 0;
+		}
+		if (addPiece == false && spawnPieceCounter < spawnPieceTimeout) {
+			newPiece();
+		}
+		if (addPiece == false && spawnPieceCounter > spawnPieceTimeout) {
+			System.out.println("do something for loss game here");
+			System.exit(0);
+		}
+	}
 }

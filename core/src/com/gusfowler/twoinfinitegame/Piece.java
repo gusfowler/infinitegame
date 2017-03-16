@@ -29,4 +29,11 @@ public class Piece {
 		text.setText(font, Integer.toString(scoreVal));
 		return text;
 	}
+	
+	public boolean equals(Piece p) 
+	{
+		boolean tf = false;
+		if (p.boardX == boardX && p.boardY == boardY) tf = true;
+		return tf;
+	}
 }
