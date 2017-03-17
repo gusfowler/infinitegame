@@ -48,10 +48,10 @@ public class gameManage {
 		boolean addPiece = true;
 		int xMult = MathUtils.random(0, boardMultiplier - 1);
 		int yMult = MathUtils.random(0, boardMultiplier - 1);
-		Piece piece = new Piece(gScreen.infGame.font, coords[xMult], coords[yMult], (float)gScreen.whiteBox.getWidth(), (float)gScreen.whiteBox.getHeight(), xMult, yMult);
+		Piece piece = new Piece(gScreen.infGame.font, gScreen.baseSprite, coords[xMult], coords[yMult], xMult, yMult);
 		
 		for (Piece x : gamePieces) {
-			if ((piece.boardX == x.boardX && piece.boardY == x.boardY) || (piece.rec.x == x.rec.x && piece.rec.y == x.rec.y)) {
+			if ((piece.boardX == x.boardX && piece.boardY == x.boardY) || (piece.sprite.getX() == x.sprite.getX() && piece.sprite.getY() == x.sprite.getY())) {
 				addPiece = false;
 			}
 		}
